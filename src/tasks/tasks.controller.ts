@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Logger,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './mappers/task';
@@ -16,10 +17,12 @@ import { UpdateTaskStatusDto } from './dto/update-task-status-dto';
 
 @Controller('tasks')
 export class TasksController {
+  private logger = new Logger('TasksController');
   constructor(private taskService: TasksService) {}
 
   @Get('/')
   public getTasks(@Query() filterDto: GetTasksFilterDto) {
+    this.logger.log('Getting tasks', true);
     if (Object.keys(filterDto).length) {
       return this.taskService.getTasksWithFilters(filterDto);
     } else {
