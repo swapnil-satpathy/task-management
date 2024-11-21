@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus } from './mappers/task';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDto } from './dto/create-task-dto';
@@ -26,7 +26,12 @@ export class TasksService {
   }
 
   public getTaskById(id: string): Task {
-    return this.tasks.find((task) => task.id === id);
+    const _id = this.tasks.find((task) => task.id === id);
+    // No need for try catch. NestJS will handle this exception
+    if (!_id) {
+      throw new NotFoundException(`Task with id - ${_id} not found`);
+    }
+    return _id;
   }
 
   public createTask(createTaskDto: CreateTaskDto): Task {
